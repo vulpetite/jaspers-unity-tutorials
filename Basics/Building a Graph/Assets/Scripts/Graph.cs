@@ -10,7 +10,7 @@ public class Graph : MonoBehaviour {
     void Awake () {
         float step = 2f / resoution;
         var position = Vector3.zero;
-        var scale = Vector3.one / 5f;
+        var scale = Vector3.one * step;
         for (int i = 0; i < resoution; i++) { 
             Transform point = Instantiate(pointPrefab);
             position.x = (i + 0.5f) * step - 1f;
