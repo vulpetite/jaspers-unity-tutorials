@@ -7,8 +7,8 @@ public class Graph : MonoBehaviour {
     [SerializeField, Range(10, 100)]
     int resoution = 10;
 
-    [SerializeField, Range(0, 2)]
-    int function;
+    [SerializeField]
+    FunctionLibrary.FunctionName function;
 
     Transform[] points;
 
@@ -29,18 +29,13 @@ public class Graph : MonoBehaviour {
     }
 
     void Update () {
+        FunctionLibrary.Function f = FunctionLibrary.GetFunction(function);
         float time = Time.time;
         for (int i = 0; i < points.Length; i++) {
             Transform point = points[i];
             Vector3 position = point.localPosition;
-            if (function == 0) {
-                position.y = FunctionLibrary.Wave(position.x, time);
-            } else if (function == 1) {
-                position.y = FunctionLibrary.MultiWave(position.x, time);
-            } else {
-                position.y = FunctionLibrary.Ripple(position.x, time);
-            }
-                point.localPosition = position;
+            position.y = f(position.x, time);
+            point.localPosition = position;
         }
     }
 }
