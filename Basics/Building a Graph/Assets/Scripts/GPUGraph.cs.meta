@@ -5,6 +5,8 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - computeShader: {fileID: 7200000, guid: 151bde44a0c844ad3ae55b3db8f0bdc8, type: 3}
+  - material: {fileID: 2100000, guid: ce8963f23b5fe445da55a9ac313cb18e, type: 2}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
