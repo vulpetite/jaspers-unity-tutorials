@@ -1,4 +1,5 @@
 using UnityEngine;
+using static FunctionLibrary;
 
 public class GPUGraph : MonoBehaviour {
     const int maxResolution = 1000;
@@ -38,7 +39,8 @@ public class GPUGraph : MonoBehaviour {
         positionsId = Shader.PropertyToID("_Positions"),
         resolutionId = Shader.PropertyToID("_Resolution"),
         stepId = Shader.PropertyToID("_Step"),
-        timeId = Shader.PropertyToID("_Time");
+        timeId = Shader.PropertyToID("_Time"),
+        transitionProgressId = Shader.PropertyToID("_TransitionProgress");
 
     void OnEnable() {
         positionsBuffer = new ComputeBuffer(maxResolution * maxResolution, 3 * 4);
@@ -72,13 +74,23 @@ public class GPUGraph : MonoBehaviour {
             FunctionLibrary.GetRandomFunctionNameOtherThan(function);
     }
 
-    void UpdateFunctionOnGPU () {
+    void UpdateFunctionOnGPU() {
         float step = 2f / resolution;
         computeShader.SetInt(resolutionId, resolution);
         computeShader.SetFloat(stepId, step);
         computeShader.SetFloat(timeId, Time.time);
+        if (transitioning) {
+            computeShader.SetFloat(
+                transitionProgressId,
+                Mathf.SmoothStep(0f, 1f, duration / transitionDuration)
+            );
+        }
 
-        var kernelIndex = (int)function;
+        var kernelIndex =
+            (int)function +
+            (int)(transitioning ? transitionFunction : function) *
+            FunctionLibrary.FunctionCount;
+
         computeShader.SetBuffer(kernelIndex, positionsId, positionsBuffer);
 
         int groups = Mathf.CeilToInt(resolution / 8f);
@@ -91,5 +103,4 @@ public class GPUGraph : MonoBehaviour {
             mesh, 0, material, bounds, resolution * resolution
         );
     }
-
 }
