@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointPrefab: {fileID: 8571432336022032005, guid: 95e4213765ae143d1a256b7fb0948fab, type: 3}
-  resolution: 10
+  resolution: 200
   function: 0
   transitionMode: 0
   functionDuration: 1
@@ -366,7 +366,7 @@ MonoBehaviour:
   computeShader: {fileID: 7200000, guid: 151bde44a0c844ad3ae55b3db8f0bdc8, type: 3}
   material: {fileID: -876546973899608171, guid: eed74609a95df4d158e7d9a1c8e5cadb, type: 3}
   mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  resolution: 71
+  resolution: 1000
   function: 0
   transitionMode: 0
   functionDuration: 1

@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class GPUGraph : MonoBehaviour {
+    const int maxResolution = 1000;
+
     [SerializeField]
     ComputeShader computeShader;
 
@@ -10,8 +12,8 @@ public class GPUGraph : MonoBehaviour {
     [SerializeField]
     Mesh mesh;
 
-    [SerializeField, Range(10, 1000)]
-    int resolution = 1000;
+    [SerializeField, Range(10, maxResolution)]
+    int resolution = 10;
 
     [SerializeField]
     FunctionLibrary.FunctionName function;
@@ -39,7 +41,7 @@ public class GPUGraph : MonoBehaviour {
         timeId = Shader.PropertyToID("_Time");
 
     void OnEnable() {
-        positionsBuffer = new ComputeBuffer(resolution * resolution, 3 * 4);
+        positionsBuffer = new ComputeBuffer(maxResolution * maxResolution, 3 * 4);
     }
 
     void OnDisable() {
@@ -76,16 +78,17 @@ public class GPUGraph : MonoBehaviour {
         computeShader.SetFloat(stepId, step);
         computeShader.SetFloat(timeId, Time.time);
 
-        computeShader.SetBuffer(0, positionsId, positionsBuffer);
+        var kernelIndex = (int)function;
+        computeShader.SetBuffer(kernelIndex, positionsId, positionsBuffer);
 
         int groups = Mathf.CeilToInt(resolution / 8f);
-        computeShader.Dispatch(0, groups, groups, 1);
+        computeShader.Dispatch(kernelIndex, groups, groups, 1);
 
         material.SetBuffer(positionsId, positionsBuffer);
         material.SetFloat(stepId, step);
         var bounds = new Bounds(Vector3.zero, Vector3.one * (2f + 2f / resolution));
         Graphics.DrawMeshInstancedProcedural(
-            mesh, 0, material, bounds, positionsBuffer.count
+            mesh, 0, material, bounds, resolution * resolution
         );
     }
 
